@@ -64,4 +64,4 @@ jobs:
           export TEST_SNAP="$PWD/build/k8s.snap"
           export TEST_SUBSTRATE=lxd
           export TEST_LXD_IMAGE=${{ matrix.os }}
-          cd tests/e2e && sg lxd -c 'tox -e e2e'
+          cd tests/e2e && sg lxd -c 'tox -e e2e -- -s'
