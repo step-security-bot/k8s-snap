@@ -7,73 +7,90 @@ workspace "Canonical K8s Workspace" {
         user = person "K8s User" "Interact with the workloads hosted in K8s"
         charm = softwareSystem "Charm K8s" "Orchestrating the lifecycle management of K8s"
 
-        lb = softwareSystem "Load Balancer" "External LB, offered by the substrate (cloud)" "Extern"
+        external_lb = softwareSystem "Load Balancer" "External LB, offered by the substrate (cloud)" "Extern"
         storage = softwareSystem "Storage" "External storage, offered by the substrate (cloud)" "Extern"
         iam = softwareSystem "Identity management system" "External identity system, offered by the substrate (cloud)" "Extern"
         external_datastore = softwareSystem "External datastore" "postgress or etcd" "Extern"
   
-        k8s_snap = softwareSystem "K8s Snap Distribution" "The Kubernetes distribution in a snap" {
+       k8s_snap = softwareSystem "K8s Snap Distribution" "The Kubernetes distribution in a snap" {
 
-            ui = container "User Interfaces" "The interfaces the K8s snap offers" {
-                cli = component "CLI" "The CLI the offered" "CLI"
-                api = component "REST API" "The REST interface offered" "REST"
-                workload_api = component "Workloads" "The API exposed by the hosted workloads" "Web services"
+            kubectl = container "Kubectl" "kubectl client for accessing the cluster"
+
+            kubernetes = container "Kubernetes Services" "API server, kubelet, kube-proxy, scheduler, kube-controller" {
+                systemd = component "systemd daemons" "Daemons holding the k8s services" 
+                apiserver = component "API server"
+                kubelet = component "kubelet"
+                kube_proxy = component "kube-proxy"
+                scheduler = component "scheduler"
+                kube_controller = component "kube-controller"
             }
 
-            logic = container "K8s" "" {
-                k8s_services = component "Kubernetes services" "proxy, scheduler control manager"
-                apiserver = component "Kube API server" "The upstream Kubernetes API server"
-                rt = component "Runtime" "Kubelet, containerd and runc"
-            }
+            rt = container "Runtime" "Containerd and runc"
 
-            components = container "Components" "Default supported components" {
-                component_manager = component "Component management" "Managements of the CNI, RBAC, DNS, hostpath-storage, ingress"
-                cni = component "Cilium network CNI" "The network implementation of K8s"
-                storage_provider = component "Local host storage provider" "Simple storage for workloads"
-                ingress = component "Ingress" "Ingress for workloads"
+            components = container "Components" "Core components for the k8s distribution" {
+                cni = component "Cilium network CNI" "The network implementation of K8s (from Cilium)"
+                storage_provider = component "LocalPV storage provider" "Simple storage for workloads"
+                ingress = component "Ingress" "Ingress for workloads (from Cilium)"
+                gw = component "Gateway" "Gateway API for workloads (from Cilium)"
                 dns = component "DNS" "Internal DNS"
                 rbac = component "RBAC" "User authorization"
+                loadbalancer = component "Load-balancer" "The load balancer (from Cilium)"
+            }
+
+            k8sd = container "K8sd" "Deamon implementing the functionality available in the k8s snap" {
+                cli = component "CLI" "The CLI the offered" "CLI"
+                api = component "REST API" "The REST interface offered" "REST"
+                cluster_manager = component "CLuster management" "Management of the cluster with the help of MicroCLuster"
+                component_manager = component "Component management" "Management of the CNI, RBAC, DNS, storage, ingress"
             }
 
             state = container "State" "Datastores holding the cluster state" {
-                k8sd = component "k8sd" "MicroCluster DB and REST API implementation"
+                k8sd_db = component "k8sd-dqlite" "MicroCluster DB"
                 k8s_dqlite = component "k8s-dqlite" "Datastore holding the K8s cluster state"
             }
         }
 
         admin -> cli "Sets up and configured the cluster"
-        user -> workload_api "Interacts with workloads hosted in K8s"
+        admin -> kubectl "Uses to manage the cluster"
+        user -> loadbalancer "Interacts with workloads hosted in K8s"
         charm -> api "Orchestrates the lifecycle management of K8s"
 
-        k8s_snap -> lb "Uses a LB to expose workloads"
         k8s_snap -> storage "Hosted workloads use storage"
         k8s_snap -> iam "Users identity is retrieved"
 
         k8s_dqlite -> external_datastore "May be replaced by" "Any" "Runtime"
-        workload_api -> rt "Instantiated by"
-        workload_api -> lb "Exposed by"
-        apiserver -> k8s_dqlite "Uses by default"
+        loadbalancer -> external_lb "May be replaced by" "Any" "Runtime"
 
         component_manager -> cni "Handles"
         component_manager -> dns "Handles"
         component_manager -> rbac "Handles"
         component_manager -> storage_provider "Handles"
-        component_manager -> ingress "Handles"
 
-        cni -> k8s_dqlite "Keeps state in"
+        cluster_manager -> systemd "Configures"
+
+        systemd -> apiserver "Is a service"
+        systemd -> kubelet "Is a service"
+        systemd -> kube_proxy "Is a service"
+        systemd -> kube_controller "Is a service"
+        systemd -> scheduler "Is a service"
+
+        cni -> apiserver "Keeps state in"
+        dns -> apiserver "Keeps state in"
+        apiserver -> k8s_dqlite "Uses by default"
+
         cni -> ingress "May provide" "HTTP/HTTPS" "Runtime"
-        cni -> lb "May provide" "HTTP/HTTPS" "Runtime"
-        dns -> k8s_dqlite "Keeps state in"
-        ingress -> k8s_dqlite "Keeps state in"
+        cni -> gw "May provide" "HTTP/HTTPS" "Runtime"
+        cni -> loadbalancer "May provide" "HTTP/HTTPS" "Runtime"
 
-        cli -> apiserver "Interacts via kubectl"
-        api -> k8s_services "Configures"
+        cluster_manager -> k8sd_db "Keeps state in"
+
+        kubectl -> apiserver "Interacts"
+        api -> systemd "Configures"
         api -> rt "Configures"
-        api -> apiserver "Configures"
-        api -> components "Configures"
+        api -> component_manager "Uses"
+        api -> cluster_manager "Uses"
 
         cli -> api "CLI is based on the API primitives"
-        api -> k8sd "Uses k8sd as the DB layer"
 
     }
     views {
@@ -89,16 +106,10 @@ workspace "Canonical K8s Workspace" {
             title "K8s Snap Context View"
         }
 
-        component ui {
+        component state {
             include *
             autoLayout
-            title "K8s Snap Interfaces"
-        }
-
-        component logic {
-            include *
-            autoLayout
-            title "K8s Logic"
+            title "Datastores"
         }
 
         component components {
@@ -107,10 +118,16 @@ workspace "Canonical K8s Workspace" {
             title "Components"
         }
 
-        component state {
+        component k8sd {
             include *
             autoLayout
-            title "Datastores"
+            title "k8sd"
+        }
+
+        component kubernetes {
+            include *
+            autoLayout
+            title "Kubernetes services"
         }
 
         styles {
