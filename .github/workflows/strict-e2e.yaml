@@ -2,7 +2,7 @@ name: End to End Tests (Strict)
 
 on:
   push:
-    branches: [main]
+    branches: [main, dev/test-iptables]
   pull_request:
     branches: [main]
 

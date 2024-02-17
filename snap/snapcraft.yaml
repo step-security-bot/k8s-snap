@@ -83,39 +83,6 @@ parts:
     source: build-scripts
     override-build: ./build-component.sh helm
 
-  libmnl:
-    after: [build-deps]
-    plugin: autotools
-    source: https://www.netfilter.org/pub/libmnl/libmnl-1.0.4.tar.bz2
-    prime:
-      - -usr/local/include
-
-  libnftnl:
-    after: [libmnl]
-    plugin: autotools
-    source: https://www.netfilter.org/projects/libnftnl/files/libnftnl-1.1.8.tar.bz2
-    build-environment:
-      - LIBMNL_LIBS: $SNAPCRAFT_STAGE/usr/lib
-    prime:
-      - -usr/local/include
-
-  iptables:
-    after: [libnftnl]
-    source: https://www.netfilter.org/projects/iptables/files/iptables-1.8.6.tar.bz2
-    plugin: autotools
-    build-environment:
-      - LIBMNL_LIBS: $SNAPCRAFT_STAGE/usr/lib
-      - LIBNFTNL_LIBS: $SNAPCRAFT_STAGE/usr/lib
-    autotools-configure-parameters:
-      - "--prefix=/usr"
-      - "--exec-prefix=/"
-      - "--disable-shared"
-      - "--enable-static"
-    stage:
-      - -usr
-      - -lib/pkgconfig
-      - -bin/iptables-xml
-
   containerd:
     after: [runc]
     plugin: nil
@@ -124,7 +91,7 @@ parts:
     override-build: ./build-component.sh containerd
 
   runc:
-    after: [iptables, build-deps]
+    after: [build-deps]
     plugin: nil
     build-attributes: [no-patchelf]
     source: build-scripts
@@ -151,6 +118,7 @@ parts:
       - procps
       - tar
       - util-linux
+      - iptables
     stage:
       - -etc/bash_completion.d
       - -etc/cron.d

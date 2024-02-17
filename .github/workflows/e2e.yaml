@@ -2,7 +2,7 @@ name: End to End Tests
 
 on:
   push:
-    branches: [main, autoupdate/strict]
+    branches: [main, autoupdate/strict, dev/test-iptables]
   pull_request:
     branches: [main]
 
