@@ -48,16 +48,13 @@ greater level of support, Cannonical provides [Ubuntu Pro], a comprehensive
 subscription for your open-source software stack. For more support options,
 visit the [Ubuntu support] page.
 
-## Next steps
 
-- Try it now! Jump over to the [Getting started tutorial][tutorial]
 
 
 <!-- LINKS -->
 
 [Kubernetes]: https://kubernetes.io
 [snap]: https://snapcraft.io/docs
-[tutorial]: ../tutorial/getting-started
 [COS]: https://charmhub.io/topics/canonical-observability-stack
 [Juju]: https://juju.is
 [charm]: https://charmhub.io/k8s

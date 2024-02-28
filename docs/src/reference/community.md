@@ -36,8 +36,7 @@ aim to triage all bug reports within three working days.
 ## Contributing to the code? 
 
 Canonical Kubernetes is proudly open source, published under the GPLv3 license.
-We welcome and encourage contributions to the code. Please see the [Developer
-guide] for more information on contributing.
+We welcome and encourage contributions to the code.
 
 **Our commitment to you** - we closely follow activity on the source
 repository. We aim to respond to any PRs within three working days. 
@@ -47,8 +46,7 @@ repository. We aim to respond to any PRs within three working days.
 Our documentation is extremely important to us and is actively maintained by
 the entire team. That doesn't mean that it can't be improved though. Every page
 in the documentation has an "Edit this page" link in the top right which takes
-you to GitHub to make small changes. For larger contributions, please see the
-[Contributing guide].
+you to GitHub to make small changes. 
 
 **Our commitment to you**: Comments are usually read daily and we are really
 grateful for docs improvements.
@@ -69,6 +67,4 @@ the guidelines for participation.
 [matrix]: https://matrix.to/#/#k8s:ubuntu.com
 [Discourse]: https://discourse.ubuntu.com/c/kubernetes/180
 [bugs]: https://github.com/canonical/k8s-snap/issues
-[Contributing guide]: *TODO*
-[Developer guide]: *TODO*
 [support]: https://ubuntu.com/support

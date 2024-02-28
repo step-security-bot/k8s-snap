@@ -12,47 +12,8 @@ a scaleable cluster suitable for all use cases.
 :titlesonly:
 :glob:
 Home <self>
-tutorial/index
-howto/index
-explanation/index
-reference/index
+explanation/about
 ```
-
----
-
-## In this documentation
-
-
-
-````{grid} 1 1 2 2
-
-```{grid-item-card} [Tutorial](tutorial/index)
-
-**Start here!** A hands-on introduction to Canonical K8s for new users
-```
-
-```{grid-item-card} [How-to guides](howto/index)
-
-**Step-by-step guides** covering key operations and common tasks
-```
-
-````
-
-````{grid} 1 1 2 2
-
-
-```{grid-item-card} [Reference](reference/index)
-
-**Technical information** - specifications, APIs, architecture
-```
-
-```{grid-item-card} [Explanation](explanation/index)
-
-**Discussion and clarification** of key topics`
-```
-
-````
-
 
 ---
 
