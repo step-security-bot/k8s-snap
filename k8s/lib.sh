@@ -69,6 +69,11 @@ k8s::remove::network() {
   do
     tc filter del dev $default_interface ${d} || true
   done
+
+  # Run cilium-dbg cleanup with the appropriate flags 
+  # TODO  doe we need to run --bpf-state flag also?
+  sudo apt install cilium-dbg
+  cilium cilium-dbg cleanup --all-state --force
 }
 
 # [DANGER] Cleanup containers and runtime state. Note that the order of operations below is crucial.
