@@ -31,9 +31,9 @@ datastore-client-key: |
 ```
 
 * `datastore-url` field accepts a comma seperated list of addresses (e.g. `https://10.42.254.192:2379,https://10.42.254.193:2379,https://10.42.254.194:2379`)
-* `datastore-ca-crt` field accepts a PEM encoded certificate for the CA
-* `datastore-client-crt` field accepts a PEM encoded certificate that's signed by the root CA for the client
-* `datastore-client-key` field accepts a PEM encoded key for the client
+* `datastore-ca-crt` field accepts a certificate for the CA in PEM format
+* `datastore-client-crt` field accepts a certificate that's signed by the root CA for the client in PEM format
+* `datastore-client-key` field accepts a key for the client in PEM format
 
 ```{note}
 `datastore-ca-crt`, `datastore-client-crt` and `datastore-client-key` options can be omitted if the ETCD cluster is not configured to use secure connections.
