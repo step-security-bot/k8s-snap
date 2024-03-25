@@ -1,23 +1,23 @@
 # How to use an external datastore
 
-Canonical Kubernetes supports using an external datastore such as ETCD instead of the bundled in dqlite datastore. This guide walks you through configuring an external ETCD datastore.
+Canonical Kubernetes supports using an external datastore such as etcd instead of the bundled dqlite datastore. This guide walks you through configuring an external etcd datastore.
 
 ## What you'll need
 
 This guide assumes the following:
 
 - You have root or sudo access to the machine
-- You have an external ETCD cluster
+- You have an external etcd cluster
 - You have installed the Canonical Kubernetes snap
 - You have not bootstrapped the Canonical Kubernetes cluster yet
 
 ```{warning}
-The selection of the backing datastore can only be changed during the bootstrap process. There is no migration path between the bundled in dqlite and the external datastores.
+The selection of the backing datastore can only be changed during the bootstrap process. There is no migration path between the bundled dqlite and the external datastores.
 ```
 
 ## Adjust the bootstrap configuration
 
-To use an external datastore, a configuration file that contains the required datastore parameters needs to be provided to the bootstrap command. Create a configuration file and insert the contents below while replacing the placeholder values based on the configuration of your ETCD cluster.
+To use an external datastore, a configuration file that contains the required datastore parameters needs to be provided to the bootstrap command. Create a configuration file and insert the contents below while replacing the placeholder values based on the configuration of your etcd cluster.
 
 ```yaml
 datastore: external
@@ -36,7 +36,7 @@ datastore-client-key: |
 * `datastore-client-key` field accepts a key for the client in PEM format
 
 ```{note}
-`datastore-ca-crt`, `datastore-client-crt` and `datastore-client-key` options can be omitted if the ETCD cluster is not configured to use secure connections.
+`datastore-ca-crt`, `datastore-client-crt` and `datastore-client-key` options can be omitted if the etcd cluster is not configured to use secure connections.
 ```
 
 ## Bootstrap the cluster
