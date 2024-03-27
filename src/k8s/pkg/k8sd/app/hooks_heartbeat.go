@@ -16,7 +16,7 @@ func onHeartbeat(s *state.State) error {
 	}
 
 	if err := cluster.Query(s.Context, true, func(ctx context.Context, c *client.Client) error {
-		if err := c.Query(ctx, "POST", api.NewURL().Path("k8sd", "config", "reconcile"), nil, nil); err != nil {
+		if err := c.Query(ctx, "POST", api.NewURL().Path("k8sd", "cluster", "config", "reconcile"), nil, nil); err != nil {
 			return fmt.Errorf("POST /k8sd/config/reconcile failed on %q: %w", c.URL().URL.Host, err)
 		}
 		return nil
