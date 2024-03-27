@@ -66,6 +66,12 @@ func Endpoints(app *microcluster.MicroCluster) []rest.Endpoint {
 			Put:  rest.EndpointAction{Handler: putClusterConfig, AccessHandler: RestrictWorkers},
 			Get:  rest.EndpointAction{Handler: getClusterConfig, AccessHandler: RestrictWorkers},
 		},
+		// Reconcile control plane configuration
+		{
+			Name: "ReconcileControlPlane",
+			Path: "k8sd/cluster/config/reconcile",
+			Post: rest.EndpointAction{Handler: postReconcileControlPlane, AccessHandler: RestrictWorkers},
+		},
 		// Kubernetes auth tokens and token review webhook for kube-apiserver
 		{
 			Name:   "KubernetesAuthTokens",
