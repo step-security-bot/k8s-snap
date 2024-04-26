@@ -1,0 +1,26 @@
+version: 2
+updates:
+  - package-ecosystem: pip
+    directory: /build-scripts/hack
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /docs/tools/.sphinx
+    schedule:
+      interval: daily
+
+  - package-ecosystem: pip
+    directory: /docs/tools/.sphinx
+    schedule:
+      interval: daily
+
+  - package-ecosystem: gomod
+    directory: /src/k8s
+    schedule:
+      interval: daily
+
+  - package-ecosystem: gomod
+    directory: /src/k8s/tools
+    schedule:
+      interval: daily

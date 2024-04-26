@@ -10,6 +10,9 @@ on:
       - main
       - 'release-[0-9]+.[0-9]+'
 
+permissions:
+  contents: read
+
 jobs:
   prepare:
     name: Prepare
@@ -17,6 +20,11 @@ jobs:
     outputs:
       strict: ${{ steps.determine.outputs.strict }}
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
+        with:
+          egress-policy: audit
+
       - name: Determine Strict branch
         id: determine
         env:
@@ -37,8 +45,13 @@ jobs:
     needs: [ prepare ]
     if: ${{ needs.prepare.outputs.strict }}
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
+        with:
+          egress-policy: audit
+
       - name: Checking out repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
       - name: Install lxd
         run: |
           sudo lxd init --auto
@@ -58,7 +71,7 @@ jobs:
           sg lxd -c 'snapcraft --use-lxd'
           mv k8s_*.snap k8s-strict.snap
       - name: Uploading snap
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
         with:
           name: k8s-strict.snap
           path: k8s-strict.snap
@@ -72,10 +85,15 @@ jobs:
         os: ["ubuntu:20.04"]
     runs-on: ubuntu-20.04
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
+        with:
+          egress-policy: audit
+
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5.1.0
         with:
           python-version: '3.8'
       - name: Install tox
@@ -87,7 +105,7 @@ jobs:
           sudo usermod --append --groups lxd $USER
           sg lxd -c 'lxc version'
       - name: Download snap
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e # v4.1.7
         with:
           name: k8s-strict.snap
           path: build
