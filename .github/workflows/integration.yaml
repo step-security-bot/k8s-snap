@@ -18,6 +18,11 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: audit
+
       - name: Checking out repo
         uses: actions/checkout@v4
       - name: Install lxd
@@ -47,6 +52,11 @@ jobs:
     needs: build
 
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: audit
+
       - name: Check out code
         uses: actions/checkout@v4
       - name: Setup Python
@@ -78,6 +88,11 @@ jobs:
     runs-on: ubuntu-20.04
     needs: build
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: audit
+
       - name: Checking out repo
         uses: actions/checkout@v4
       - name: Fetch snap

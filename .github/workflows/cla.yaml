@@ -10,5 +10,10 @@ jobs:
   cla-check:
     runs-on: ubuntu-latest
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: audit
+
       - name: Check if CLA signed
         uses: canonical/has-signed-canonical-cla@v1
