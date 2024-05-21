@@ -10,6 +10,9 @@ on:
       - 'autoupdate/sync/**'
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   build:
     name: Build
