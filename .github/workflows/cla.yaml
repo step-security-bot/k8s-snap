@@ -16,8 +16,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@v2
+        uses: step-security/harden-runner@f086349bfa2bd1361f7909c78558e816508cdc10 # v2.8.0
         with:
           egress-policy: audit
       - name: Check if CLA signed
-        uses: canonical/has-signed-canonical-cla@v1
+        uses: canonical/has-signed-canonical-cla@046337b42822b7868ad62970988929c79f9c1d40 # v1

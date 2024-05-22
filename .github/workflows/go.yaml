@@ -23,14 +23,14 @@ jobs:
 
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@v2
+        uses: step-security/harden-runner@f086349bfa2bd1361f7909c78558e816508cdc10 # v2.8.0
         with:
           egress-policy: audit
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
 
       - name: Install Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@cdcb36043654635271a94b9a6d1392de5bb323a7 # v5.0.1
         with:
           go-version: "1.22"
 
@@ -72,7 +72,7 @@ jobs:
           gocover-cobertura < coverage.txt > coverage.xml
 
       - name: Generate code coverage report
-        uses: irongut/CodeCoverageSummary@v1.3.0
+        uses: irongut/CodeCoverageSummary@51cc3a756ddcd398d447c044c02cb6aa83fdae95 # v1.3.0
         with:
           filename: src/k8s/coverage.xml
           badge: false
@@ -85,7 +85,7 @@ jobs:
           thresholds: '60 80'
 
       - name: Add Coverage PR Comment
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31 # v2.9.0
         if: github.event_name == 'pull_request'
         with:
           recreate: true
@@ -98,14 +98,14 @@ jobs:
 
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@v2
+        uses: step-security/harden-runner@f086349bfa2bd1361f7909c78558e816508cdc10 # v2.8.0
         with:
           egress-policy: audit
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
 
       - name: Install Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@cdcb36043654635271a94b9a6d1392de5bb323a7 # v5.0.1
         with:
           go-version: "1.22"
 

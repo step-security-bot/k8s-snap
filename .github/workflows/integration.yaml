@@ -20,11 +20,11 @@ jobs:
 
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@v2
+        uses: step-security/harden-runner@f086349bfa2bd1361f7909c78558e816508cdc10 # v2.8.0
         with:
           egress-policy: audit
       - name: Checking out repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
       - name: Install lxd
         run: |
           sudo lxd init --auto
@@ -38,7 +38,7 @@ jobs:
           sg lxd -c 'snapcraft --use-lxd'
           mv k8s_*.snap k8s.snap
       - name: Uploading snap
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
         with:
           name: k8s.snap
           path: k8s.snap
@@ -52,10 +52,15 @@ jobs:
     needs: build
 
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@f086349bfa2bd1361f7909c78558e816508cdc10 # v2.8.0
+        with:
+          egress-policy: audit
+
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # v5.1.0
         with:
           python-version: '3.8'
       - name: Install tox
@@ -67,7 +72,7 @@ jobs:
           sudo usermod --append --groups lxd $USER
           sg lxd -c 'lxc version'
       - name: Download snap
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e # v4.1.7
         with:
           name: k8s.snap
           path: build
@@ -87,13 +92,13 @@ jobs:
     needs: build
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@v2
+        uses: step-security/harden-runner@f086349bfa2bd1361f7909c78558e816508cdc10 # v2.8.0
         with:
           egress-policy: audit
       - name: Checking out repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
       - name: Fetch snap
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e # v4.1.7
         with:
           name: k8s.snap
           path: build
@@ -104,7 +109,7 @@ jobs:
           wget https://github.com/aquasecurity/trivy/releases/download/${VER}/trivy_${VER#v}_Linux-64bit.tar.gz
           tar -zxvf ./trivy_${VER#v}_Linux-64bit.tar.gz
       - name: Run Trivy vulnerability scanner in repo mode
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@fd25fed6972e341ff0007ddb61f77e88103953c2 # master
         with:
           scan-type: "fs"
           ignore-unfixed: true
@@ -120,6 +125,6 @@ jobs:
           unsquashfs k8s.snap
           ./trivy rootfs ./squashfs-root/ --format sarif > sarifs/snap.sarif
       - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@9fdb3e49720b44c48891d036bb502feb25684276 # v3.25.6
         with:
           sarif_file: "sarifs"
